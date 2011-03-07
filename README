@@ -1,0 +1,18 @@
+This is my Emacs config. It is like no-one else's config. It is a special snowflake :-)
+
+Installing:
+
+1) git clone git://github.com/kevsmith/emacs.git
+
+2) cd to the freshly cloned repo and run: git submodule init;git submodule update
+
+3) Run the included Makefile. It will build distel's elisp and Erlang bits.
+
+4) Add the environment variable $EMACS_CONFIG_ROOT to .bash_profile or similar file.
+   It should point to the directory created in #1.
+
+5) Drop these two lines in your ~/.emacs file to start using this config:
+
+    ;; Path created in step #1
+    (add-to-list 'load-path "~/emacs")
+    (require 'my_config)
