@@ -1,0 +1,9 @@
+[submodule "twiddle"]
+	path = twiddle
+	url = git://github.com/hassy/http-twiddle.git
+[submodule "clojure"]
+	path = clojure
+	url = git://github.com/technomancy/clojure-mode.git
+[submodule "distel"]
+	path = distel
+	url = git://github.com/massemanet/distel.git
