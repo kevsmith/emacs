@@ -1,22 +1,5 @@
 (provide 'custom_keys_config)
 
-(require 'color-theme)
-(color-theme-initialize)
-
-(defun toggle-colors-white ()
-  (interactive)
-  (color-theme-tiger-xcode)
-  (custom-set-faces
-   '(flymake-errline ((((class color)) (:background "Red"))))
-   '(flymake-warnline ((((class color)) (:background "Blue"))))))
-
-(defun toggle-colors-black ()
-  (interactive)
-  (color-theme-dark-laptop)
-  (custom-set-faces
-   '(flymake-errline ((((class color)) (:background "DarkRed"))))
-   '(flymake-warnline ((((class color)) (:background "DarkBlue"))))))
-
 (defun set-erlang-indent (indent-size)
   (setq tab-width indent-size)
   (setq erlang-indent-level indent-size)
@@ -45,8 +28,8 @@
         (select-window (funcall selector)))
       (setq arg (if (plusp arg) (1- arg) (1+ arg))))))
 
-;; Kills all them buffers except Obtained
-;; From http://www.chrislott.org/geek/emacs/dotemacs.html
+;; Kills all them buffers except *scratch*
+;; Obtained from http://www.chrislott.org/geek/emacs/dotemacs.html
 (defun nuke-all-buffers ()
   "kill all buffers, leaving *scratch* only"
   (interactive)
@@ -54,19 +37,28 @@
 	  (buffer-list))
   (delete-other-windows))
 
-(global-set-key (kbd "M-w") 'toggle-colors-white)
-(global-set-key (kbd "M-b") 'toggle-colors-black)
+;; Displays file path for buffer
+(defun show-file-name ()
+  "Show the full path in the minibuffer"
+  (interactive)
+  (message (buffer-file-name)))
+
 (global-set-key (kbd "C-x t") 'transpose-buffers)
 (global-set-key (kbd "M-e") 'toggle-erlang-indent)
-(global-set-key (kbd "M-s") 'save-buffer)
+(global-set-key (kbd "s-s") 'save-buffer)
+(global-set-key (kbd "s-b") 'show-file-name)
+(global-set-key (kbd "s-+") 'text-scale-increase)
+(global-set-key (kbd "s--") 'text-scale-decrease)
+;; (global-set-key (kbd "DEL") 'delete-region)
 (global-set-key [home] 'beginning-of-line)
 (global-set-key [end] 'end-of-line)
+(global-set-key [del] 'delete-region)
 (global-set-key [f3] 'nuke-all-buffers)
 (global-set-key [f5] 'rgrep)
 
 (setq ring-bell-function 'ignore)
-(tool-bar-mode 0)
-(toggle-colors-black)
+(if (fboundp 'tool-bar-mode)
+	(tool-bar-mode 0))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 

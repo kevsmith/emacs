@@ -89,20 +89,12 @@ main([FileName]) ->
             manual_compile(FileName)
     end.
 
+-ifdef(DEBUG).
 log(Format, Data) ->
-    IsDebug = case os:getenv("FLYMAKE_DEBUG") of
-                  "false" ->
-                      false;
-                  false ->
-                      false;
-                  _ ->
-                      true
-              end,
-    log(Format, Data, IsDebug).
-
-log(Format, Data, true) ->
     file:write_file("/tmp/build.log",
                     io_lib:format(Format, Data),
-                    [append]);
-log(_, _, false) ->
+                    [append]).
+-else.
+log(_, _) ->
     ok.
+-endif.

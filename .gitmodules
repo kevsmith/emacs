@@ -7,3 +7,6 @@
 [submodule "distel"]
 	path = distel
 	url = git://github.com/massemanet/distel.git
+[submodule "emacs-color-theme-solarized"]
+	path = emacs-color-theme-solarized
+	url = ./emacs-color-theme-solarized

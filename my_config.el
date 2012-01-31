@@ -1,14 +1,20 @@
 (provide 'my_config)
 
-(defun build-config-path (path)
-  (concat (getenv "EMACS_CONFIG_ROOT") path))
+;; Fix crazy env var behavior on OSX
+(if (not (getenv "TERM_PROGRAM"))
+     (setenv "PATH"
+	     (shell-command-to-string "source $HOME/.bash_profile && printf $PATH")))
 
-(global-linum-mode t)
+
+(defun build-config-path (path)
+  (concat (concat (getenv "HOME") "/emacs") path))
+
 (setq inhibit-splash-screen t)
 
 (setq-default show-trailing-whitespace t)
 
 (add-to-list 'default-frame-alist '(alpha . (100 100)))
+(add-to-list 'load-path (build-config-path "/delsel")) ;; Configuration for delsel
 (add-to-list 'load-path (build-config-path "/erlang")) ;; Configuration for Erlang mode
 (add-to-list 'load-path (build-config-path "/c-config")) ;; Configuration for C/C++ mode
 (add-to-list 'load-path (build-config-path "/flymake")) ;; Flymake syntax checker
@@ -19,8 +25,18 @@
 (add-to-list 'load-path (build-config-path "/javascript")) ;; js2-mode
 (add-to-list 'load-path (build-config-path "/clojure-config")) ;; Clojure
 (add-to-list 'load-path (build-config-path "/twiddle")) ;; http-twiddle
+(add-to-list 'load-path (build-config-path "/linum")) ;; linum
+(add-to-list 'load-path (build-config-path "/color-theme")) ;; color-theme
+(add-to-list 'load-path (build-config-path "/emacs-color-theme-solarized")) ;; solarized theme
 
-
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-hober)))
+(require 'delsel_config)
+(require 'color-theme-solarized)
+(require 'linum)
 (require 'erlang_mode_config) ;; Loading Erlang mode
 (require 'c_config) ;; Loading C/C++ mode config
 (require 'flymake_config) ;; Loading flymake
@@ -32,9 +48,9 @@
 (require 'http-twiddle) ;; Loading http-twiddle mode
 (require 'custom_keys_config) ;; custom key bindings
 
-(require 'ido) 
+(require 'ido)
 (ido-mode 'both) ;; for buffers and files
-(setq 
+(setq
   ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
 
   ido-ignore-buffers ;; ignore these guys
@@ -55,4 +71,24 @@
   ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
 ;; when using ido, the confirmation is rather annoying...
- (setq confirm-nonexistent-file-or-buffer nil)
+(setq confirm-nonexistent-file-or-buffer nil)
+
+;; select dark solarized theme if running Cocoa Emacs
+;; otherwise select dark-laptop
+(if (fboundp 'tool-bar-mode)
+    (progn
+      (color-theme-solarized-dark)
+      (global-linum-mode)
+      (display-time))
+    (color-theme-dark-laptop))
+
+;; turn off annoying autosave & backup files
+(setq make-backup-files nil)
+(setq auto-save-list-file-name nil)
+(setq auto-save-default nil)
+
+;; turn on column mode
+(setq column-number-mode t)
+
+;; start the server
+(server-start)
