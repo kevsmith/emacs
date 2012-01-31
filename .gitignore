@@ -1,3 +1,4 @@
 .DS_Store/*
 flymake/bin/*.beam
 flymake/bin/eflymake
+*.elc
